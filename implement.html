@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Implement</title>
+  <link rel="stylesheet" href="implement.css">
+</head>
+
+<body>
+
+  <header>
+    <div style="padding-right: 500px; padding-left: 600px;">
+      <h1>QUẢN LÝ MÔN HỌC</h1>
+    </div>
+    <div class="header">
+      <button
+        style="width: 100px; height: 50px; border-radius: 5px; background-color: white; color: blueviolet; font-size: 20px; ">
+        <a href="lab4.html" style="text-decoration: none;">Home</a>
+      </button>
+    </div>
+  </header>
+
+  <form id="studentForm">
+    <label for="studentName">Tên môn học:</label>
+    <input type="text" id="studentName" name="studentName" required>
+
+    <label for="studentID">Mã môn học:</label>
+    <input type="text" id="studentID" name="studentID" required>
+
+    <button type="button" onclick="addStudent()">Thêm môn học</button>
+  </form>
+
+  <form id="searchForm">
+    <label for="searchKeyword">Tìm kiếm theo tên hoặc mã môn học:</label>
+    <input type="text" id="searchKeyword" name="searchKeyword">
+    <button type="button" onclick="searchStudents()">Tìm kiếm</button>
+  </form>
+
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th>Tên môn học</th>
+        <th>Mã môn học</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+
+  <script>
+
+    var students = [];
+
+
+    function addStudent() {
+      var studentName = document.getElementById('studentName').value;
+      var studentID = document.getElementById('studentID').value;
+
+
+      if (studentName && studentID) {
+
+        var student = {
+          name: studentName,
+          id: studentID
+        };
+
+
+        students.push(student);
+
+
+        updateStudentTable();
+
+
+        document.getElementById('studentName').value = '';
+        document.getElementById('studentID').value = '';
+      } else {
+        alert('Vui lòng nhập đầy đủ thông tin môn học.');
+      }
+    }
+
+
+    function deleteStudent(index) {
+      if (confirm('Bạn có chắc chắn muốn xóa môn học này không?')) {
+
+        students.splice(index, 1);
+
+
+        updateStudentTable();
+      }
+    }
+
+
+    function editStudent(index) {
+      var student = students[index];
+      var newName = prompt('Nhập tên mới:', student.name);
+      var newID = prompt('Nhập mã môn học mới:', student.id);
+
+
+      if (newName !== null && newID !== null) {
+
+        student.name = newName;
+        student.id = newID;
+
+
+        updateStudentTable();
+      }
+    }
+
+
+    function searchStudents() {
+      var keyword = document.getElementById('searchKeyword').value.toLowerCase();
+      var searchResults = [];
+
+
+      for (var i = 0; i < students.length; i++) {
+        var studentName = students[i].name.toLowerCase();
+        var studentID = students[i].id.toLowerCase();
+
+        if (studentName.includes(keyword) || studentID.includes(keyword)) {
+          searchResults.push(students[i]);
+        }
+      }
+
+
+      displaySearchResults(searchResults);
+    }
+
+
+    function displaySearchResults(results) {
+      var tableBody = document.querySelector('#studentTable tbody');
+      tableBody.innerHTML = '';
+
+
+      for (var i = 0; i < results.length; i++) {
+        var row = tableBody.insertRow(i);
+        var cellName = row.insertCell(0);
+        var cellID = row.insertCell(1);
+        var cellActions = row.insertCell(2);
+
+        cellName.innerHTML = results[i].name;
+        cellID.innerHTML = results[i].id;
+
+
+        var deleteButton = document.createElement('button');
+        deleteButton.innerHTML = 'Xóa';
+        deleteButton.className = 'delete-btn';
+        deleteButton.onclick = (function (index) {
+          return function () {
+            deleteStudent(index);
+          };
+        })(students.indexOf(results[i]));
+
+        cellActions.appendChild(deleteButton);
+
+
+        var editButton = document.createElement('button');
+        editButton.innerHTML = 'Sửa';
+        editButton.className = 'edit-btn';
+        editButton.onclick = (function (index) {
+          return function () {
+            editStudent(index);
+          };
+        })(students.indexOf(results[i]));
+
+        cellActions.appendChild(editButton);
+      }
+
+
+      if (results.length > 0) {
+        alert('Đã tìm thấy ' + results.length + ' môn học.');
+      } else {
+        alert('Không tìm thấy môn học.');
+      }
+    }
+
+
+    function updateStudentTable() {
+      var tableBody = document.querySelector('#studentTable tbody');
+      tableBody.innerHTML = '';
+
+
+      for (var i = 0; i < students.length; i++) {
+        var row = tableBody.insertRow(i);
+        var cellName = row.insertCell(0);
+        var cellID = row.insertCell(1);
+        var cellActions = row.insertCell(2);
+
+        cellName.innerHTML = students[i].name;
+        cellID.innerHTML = students[i].id;
+
+
+        var deleteButton = document.createElement('button');
+        deleteButton.innerHTML = 'Xóa';
+        deleteButton.className = 'delete-btn';
+        deleteButton.onclick = (function (index) {
+          return function () {
+            deleteStudent(index);
+          };
+        })(i);
+
+        cellActions.appendChild(deleteButton);
+
+
+        var editButton = document.createElement('button');
+        editButton.innerHTML = 'Sửa';
+        editButton.className = 'edit-btn';
+        editButton.onclick = (function (index) {
+          return function () {
+            editStudent(index);
+          };
+        })(i);
+
+        cellActions.appendChild(editButton);
+      }
+    }
+  </script>
+
+</body>
+
+</html>

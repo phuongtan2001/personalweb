@@ -1,0 +1,30 @@
+.header{
+    position: relative;
+    top: 250px;
+    display: flex;
+    background-color:blueviolet;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+}
+
+.home{
+    position: relative;
+    left: 1400px;
+}
+
+a{
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+a:hover{
+    color: orange;
+}
+
+.child-header{
+    padding-left: 150px;
+    padding-right: 150px;
+}
+
